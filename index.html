@@ -3,508 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanika Puhazholi - Portfolio</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #5385c1;
-            --dark: #1c1d26;
-            --light: #f5f5f5;
-            --accent: #49bf9d;
-            --text: #3e3e3e;
-            --border: #d3d3d3;
-        }
-
-        body {
-            font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 16pt;
-            font-weight: 300;
-            line-height: 1.65;
-            color: var(--text);
-            background: #f7f7f7;
-        }
-
-        h1, h2, h3, h4 {
-            font-weight: 300;
-            color: var(--dark);
-            line-height: 1.5;
-        }
-
-        h1 { font-size: 2.5em; margin-bottom: 0.5em; }
-        h2 { font-size: 1.75em; margin-bottom: 1em; }
-        h3 { font-size: 1.35em; margin-bottom: 0.5em; }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-        }
-
-        a:hover {
-            border-bottom-color: var(--primary);
-        }
-
-        /* Layout */
-        #wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        #sidebar {
-            width: 35%;
-            max-width: 450px;
-            background: var(--dark);
-            color: rgba(255, 255, 255, 0.5);
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            padding: 3em 2em;
-        }
-
-        #sidebar header {
-            margin-bottom: 2em;
-        }
-
-        #sidebar h1 {
-            color: #fff;
-            font-size: 1.75em;
-            margin-bottom: 0.25em;
-        }
-
-        #sidebar .subtitle {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.5);
-            line-height: 1.5;
-        }
-
-        #sidebar nav {
-            margin: 3em 0;
-        }
-
-        #sidebar nav ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        #sidebar nav li {
-            margin-bottom: 0.75em;
-        }
-
-        #sidebar nav a {
-            color: rgba(255, 255, 255, 0.5);
-            border: none;
-            display: block;
-            padding: 0.5em 0;
-            transition: color 0.3s;
-        }
-
-        #sidebar nav a:hover {
-            color: #fff;
-        }
-
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3em;
-            color: #fff;
-            font-weight: 400;
-            margin-bottom: 1.5em;
-        }
-
-        .contact-info {
-            margin-top: 2em;
-            font-size: 0.85em;
-        }
-
-        .contact-info a {
-            color: rgba(255, 255, 255, 0.75);
-            border: none;
-            display: block;
-            margin-bottom: 0.5em;
-        }
-
-        .contact-info a:hover {
-            color: #fff;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 1em;
-            margin-top: 1.5em;
-        }
-
-        .social-icons a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.075);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.5);
-            border: none;
-            transition: all 0.3s;
-        }
-
-        .social-icons a:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        /* Main Content */
-        #main {
-            margin-left: 35%;
-            max-width: 950px;
-            width: 100%;
-            background: #fff;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
-        }
-
-        section {
-            padding: 4em 4em 2em 4em;
-            border-top: 3px solid var(--light);
-        }
-
-        section:first-child {
-            border-top: none;
-        }
-
-        /* Hero Section */
-        #intro {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #fff;
-            border: none;
-        }
-
-        #intro h1 {
-            color: #fff;
-            font-size: 2.75em;
-        }
-
-        #intro p {
-            font-size: 1.25em;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 1.5em;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2em;
-            margin-top: 2em;
-        }
-
-        .stat-box {
-            text-align: center;
-            padding: 1.5em;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: 400;
-            color: #fff;
-            display: block;
-            margin-bottom: 0.25em;
-        }
-
-        .stat-label {
-            font-size: 0.85em;
-            color: rgba(255, 255, 255, 0.75);
-        }
-
-        /* Research Section */
-        .research-paper {
-            background: var(--light);
-            padding: 2.5em;
-            border-radius: 8px;
-            margin-bottom: 2em;
-            border-left: 5px solid var(--primary);
-        }
-
-        .paper-title {
-            font-size: 1.5em;
-            color: var(--dark);
-            margin-bottom: 1em;
-        }
-
-        .paper-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5em;
-            margin-bottom: 1.5em;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.35em 0.75em;
-            background: var(--accent);
-            color: #fff;
-            border-radius: 4px;
-            font-size: 0.75em;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .research-content h4 {
-            color: var(--primary);
-            margin: 1.5em 0 0.75em 0;
-            font-weight: 400;
-        }
-
-        .research-content ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .research-content li {
-            padding-left: 1.5em;
-            position: relative;
-            margin-bottom: 0.75em;
-        }
-
-        .research-content li:before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* Experience Cards */
-        .experience-item {
-            margin-bottom: 3em;
-            padding-bottom: 3em;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .experience-item:last-child {
-            border-bottom: none;
-        }
-
-        .experience-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 1em;
-            flex-wrap: wrap;
-        }
-
-        .experience-title {
-            font-size: 1.25em;
-            color: var(--dark);
-            font-weight: 400;
-        }
-
-        .experience-org {
-            color: var(--primary);
-            font-weight: 400;
-        }
-
-        .experience-date {
-            color: #999;
-            font-size: 0.9em;
-            font-style: italic;
-        }
-
-        .experience-description {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .experience-description li {
-            padding-left: 1.5em;
-            position: relative;
-            margin-bottom: 0.5em;
-        }
-
-        .experience-description li:before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-        }
-
-        /* Skills Grid */
-        .skills-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2em;
-        }
-
-        .skill-group {
-            background: var(--light);
-            padding: 2em;
-            border-radius: 8px;
-        }
-
-        .skill-group h3 {
-            margin-bottom: 1em;
-            color: var(--dark);
-            font-size: 1.1em;
-        }
-
-        .skill-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5em;
-        }
-
-        .skill-item {
-            background: #fff;
-            padding: 0.5em 1em;
-            border-radius: 20px;
-            font-size: 0.85em;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        /* Awards Grid */
-        .awards-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5em;
-        }
-
-        .award-item {
-            background: var(--light);
-            padding: 1.5em;
-            border-radius: 8px;
-            border-top: 3px solid var(--accent);
-        }
-
-        .award-name {
-            font-weight: 400;
-            color: var(--dark);
-            margin-bottom: 0.5em;
-        }
-
-        .award-org {
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        /* Button */
-        .button {
-            display: inline-block;
-            padding: 0.75em 2em;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 4px;
-            border: none;
-            font-weight: 400;
-            transition: background 0.3s;
-        }
-
-        .button:hover {
-            background: var(--accent);
-            border-bottom: none;
-        }
-
-        /* Footer */
-        footer {
-            padding: 3em 4em;
-            background: var(--light);
-            text-align: center;
-            color: #999;
-            font-size: 0.9em;
-        }
-
-        /* Responsive */
-        @media screen and (max-width: 1280px) {
-            #sidebar {
-                width: 30%;
-            }
-            #main {
-                margin-left: 30%;
-            }
-        }
-
-        @media screen and (max-width: 980px) {
-            #wrapper {
-                flex-direction: column;
-            }
-
-            #sidebar {
-                width: 100%;
-                max-width: none;
-                position: relative;
-                height: auto;
-                padding: 2em;
-            }
-
-            #main {
-                margin-left: 0;
-            }
-
-            section {
-                padding: 3em 2em 1em 2em;
-            }
-
-            .stats-row {
-                grid-template-columns: 1fr;
-            }
-
-            .skills-container,
-            .awards-container {
-                grid-template-columns: 1fr;
-            }
-
-            .experience-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            body {
-                font-size: 14pt;
-            }
-
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-
-            section {
-                padding: 2em 1.5em 1em 1.5em;
-            }
-        }
-    </style>
+    <title>Thanika Puhazholi | AI Researcher & Engineering Leader</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <div id="wrapper">
-        <!-- Sidebar -->
         <aside id="sidebar">
             <header>
-                <img src="profile.jpg" alt="Thanika Puhazholi" style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 1.5em; object-fit: cover;">
+                <img src="your-headshot.jpg" alt="Thanika Puhazholi" class="profile-image">
                 <h1>Thanika Puhazholi</h1>
-                <p class="subtitle">AI Researcher & Engineering Leader<br>
-                Newport High School, Bellevue WA<br>
-                Expected Graduation: June 2026</p>
+                <p class="subtitle">AI Researcher & Engineering Leader<br>Newport High School, Class of 2026</p>
             </header>
-
             <nav>
                 <ul>
                     <li><a href="#intro">Home</a></li>
@@ -515,282 +31,154 @@
                     <li><a href="#awards">Awards</a></li>
                 </ul>
             </nav>
-
             <div class="contact-info">
-                <a href="mailto:thanika@outlook.com">thanika@outlook.com</a>
-                <a href="https://linkedin.com/in/thanikapuhazholi">LinkedIn Profile</a>
-                <a href="#">GitHub</a>
+                <a href="mailto:thanika@outlook.com"><i class="fas fa-envelope fa-fw"></i> thanika@outlook.com</a>
+                <a href="#"><i class="fas fa-map-marker-alt fa-fw"></i> Bellevue, Washington</a>
             </div>
-
             <div class="social-icons">
-                <a href="https://linkedin.com/in/thanikapuhazholi" title="LinkedIn">in</a>
-                <a href="#" title="GitHub">{ }</a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <div id="main">
-            <!-- Intro -->
+        <main id="main">
             <section id="intro">
-                <h1>Building the Future with AI</h1>
-                <p>High school innovator passionate about solving interdisciplinary problems through artificial intelligence and engineering. </p>
-                
-                </div>
+                <h1>Pioneering AI in Aerospace & Beyond</h1>
+                <p>A high school innovator applying artificial intelligence to solve complex, real-world problems—from forecasting NASA rocket launches to advancing medical diagnostics.</p>
             </section>
 
-            <!-- About -->
             <section id="about">
                 <h2>About Me</h2>
-                <p>I'm a passionate student at Newport High School with a clear focus on applying artificial intelligence to solve real-world challenges. My journey combines technical excellence with proven leadership—from developing predictive models for rocket launch predictions Center to co-leading a nationally ranked rocketry team.</p>
-
-                <p>As an AI Researcher selected for the Cambridge Center for International Research (top 2% of 500+ applicants), I built machine learning systems that predict rocket launch success based on weather data. This work demonstrates my ability to translate complex datasets into actionable insights that can improve critical decision-making.</p>
-
-                <p>Beyond research, I believe in making AI accessible and inspiring the next generation. I co-founded my school's Artificial Intelligence Club, growing it to 30+ members, and led hands-on workshops for middle schoolers. My technical fluency in Python, TensorFlow, and machine learning is matched by my ability to communicate complex ideas and lead diverse teams.</p>
-
-                <p>I bring a multidisciplinary perspective shaped by 10+ years in classical ballet and Bharatanatyam—disciplines that taught me precision, dedication, and the importance of iterative improvement. These same principles drive my approach to engineering and research.</p>
+                <p>I'm a researcher and engineer driven to translate complex data into actionable insights. My journey combines technical excellence—recognized by my selection to the **Cambridge Center for International Research (top 2%)**—with proven leadership as the co-lead of a **top-20 national rocketry team**.</p>
+                <p>My work focuses on creating robust machine learning systems. I developed a predictive model for rocket launch viability using NASA's Kennedy Space Center data and built a hybrid neural network for pneumonia detection. These projects showcase my ability to manage the full project lifecycle, from data analysis to model validation.</p>
+                <p>Beyond research, I'm passionate about making AI accessible. As co-founder of my school's AI Club, I grew our community to over 30 students and created interactive workshops for middle schoolers. My background in classical arts has taught me the discipline, precision, and creativity that I apply to every engineering challenge.</p>
             </section>
 
-            <!-- Research -->
             <section id="research">
                 <h2>Featured Research</h2>
-                
                 <div class="research-paper">
-                    <div class="paper-title">Machine Learning Prediction of Successful Rocket Launches at NASA Kennedy Using Lightning Data</div>
-                    
-                    <div class="paper-meta">
-                        <div class="meta-item">
-                            <span>📍</span>
-                            <span>Cambridge Center for International Research</span>
-                        </div>
-                        <div class="meta-item">
-                            <span>👤</span>
-                            <span>Dr. Hannah Rana, Mentor</span>
-                        </div>
-                        <div class="meta-item">
-                            <span>📅</span>
-                            <span>Summer 2025</span>
+                    <div class="research-header">
+                        <h3>Machine Learning Prediction of Successful Rocket Launches at NASA Kennedy Using Lightning Data</h3>
+                        <div class="paper-meta">
+                            <span><i class="fas fa-university fa-fw"></i> Cambridge Center for International Research</span>
+                            <span><i class="fas fa-user-tie fa-fw"></i> Dr. Hannah Rana, Mentor</span>
+                            <span><i class="fas fa-calendar-alt fa-fw"></i> Summer 2025</span>
                         </div>
                     </div>
-
-                    <span class="badge">Publication Pending</span>
-
-                    <div class="research-content">
-                        <p><strong>Overview:</strong> Developed a machine learning model to predict rocket launch success at NASA's Kennedy Space Center by analyzing historical lightning data. This research addresses the significant challenge of weather-related launch delays, which cost millions of dollars and disrupt tightly scheduled missions.</p>
-
-                        <h4>Key Contributions</h4>
-                        <ul>
-                            <li>Built predictive model using Kennedy Space Center datasets analyzing windshear, lightning, and rainfall data</li>
-                            <li>Integrated Support Vector Machines (SVMs) with SMOTE oversampling to handle imbalanced data (135 successful vs 10 postponed launches)</li>
-                            <li>Established 915 V/m electric field threshold for 60% success probability in launch decisions</li>
-                            <li>Demonstrated electric field strength as reliable indicator: successful launches never exceeded 839 V/m, postponed launches never fell below 943 V/m</li>
-                        </ul>
-
-                        <h4>Technical Approach</h4>
-                        <ul>
-                            <li>Feature scaling using standardization to normalize electric field measurements</li>
-                            <li>SVM hyperplane classification for binary launch/postpone decisions</li>
-                            <li>Sigmoid function for probability estimation of launch success</li>
-                            <li>SMOTE synthetic data generation to balance training dataset</li>
-                            <li>80/20 train-test split with comprehensive model validation</li>
-                        </ul>
-
-                        <h4>Impact</h4>
-                        <ul>
-                            <li>Created decision support tool reducing reliance on subjective judgment</li>
-                            <li>Offers data-driven alternative to existing methods while maintaining safety</li>
-                            <li>Demonstrates how environmental sensor data can guide critical decisions through AI</li>
-                        </ul>
+                    <div class="research-body">
+                        <div class="research-summary">
+                            <p><strong>Overview:</strong> This research addresses the critical challenge of weather-related launch delays by developing an ML model that predicts launch success using historical lightning data from NASA's KSC.</p>
+                            <a href="#" class="button" download><i class="fas fa-file-pdf"></i> Download Paper (PDF)</a>
+                            <div class="badge">Publication Pending</div>
+                        </div>
+                        <div class="research-details">
+                            <h4>Key Contributions & Findings</h4>
+                            <ul>
+                                <li>Developed an SVM model with SMOTE oversampling to correct for highly imbalanced launch data.</li>
+                                <li>Identified a key <strong>915 V/m electric field threshold</strong> as a reliable predictor for go/no-go launch decisions.</li>
+                                <li>Demonstrated that the model offers a data-driven, quantitative alternative to purely subjective safety assessments.</li>
+                            </ul>
+                            <h4>Technical Stack</h4>
+                            <ul>
+                                <li><strong>Core Libraries:</strong> Scikit-learn, Pandas, NumPy</li>
+                                <li><strong>Techniques:</strong> Support Vector Machines (SVM), SMOTE, Feature Scaling, Sigmoid Probability Estimation</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
-
-            <!-- Experience -->
+            
             <section id="experience">
-                <h2>Experience</h2>
-
+                <h2>Professional Experience</h2>
                 <div class="experience-item">
                     <div class="experience-header">
-                        <div>
-                            <div class="experience-title">AI Researcher</div>
-                            <div class="experience-org">Cambridge Center for International Research</div>
-                        </div>
-                        <div class="experience-date">Summer 2025</div>
+                        <h3>AI Researcher</h3>
+                        <span class="experience-date">Summer 2025</span>
                     </div>
-                    <ul class="experience-description">
-                        <li>Selected from 500+ applicants (top 2%) for elite research program mentored by Dr. Hannah Rana</li>
-                        <li>Built predictive model using Kennedy Space Center launch datasets to forecast launch viability</li>
-                        <li>Conducted advanced data analysis and model validation; research publication pending</li>
+                    <div class="experience-org">Cambridge Center for International Research</div>
+                    <ul>
+                        <li>Selected from 500+ applicants (top 2%) for an elite research program mentored by Dr. Hannah Rana.</li>
+                        <li>Built and validated a predictive model using Kennedy Space Center launch datasets to forecast launch viability.</li>
                     </ul>
                 </div>
-
                 <div class="experience-item">
                     <div class="experience-header">
-                        <div>
-                            <div class="experience-title">AI Developer Intern, ML Division</div>
-                            <div class="experience-org">Elite Performance Partners</div>
-                        </div>
-                        <div class="experience-date">Summer 2025</div>
+                        <h3>AI Developer Intern</h3>
+                        <span class="experience-date">Summer 2025</span>
                     </div>
-                    <ul class="experience-description">
-                        <li>Engineered ML tools and optimized GPT models to reduce hallucinations and improve accuracy</li>
-                        <li>Automated client engagement and communication workflows using Zapier</li>
-                        <li>Eliminated manual data entry and boosted operational efficiency across business processes</li>
+                    <div class="experience-org">Elite Performance Partners</div>
+                    <ul>
+                        <li>Engineered ML tools and optimized GPT models to reduce hallucinations and improve source-based accuracy.</li>
+                        <li>Automated client communication workflows using Zapier, eliminating manual data entry.</li>
                     </ul>
                 </div>
-
-                <div class="experience-item">
+                 <div class="experience-item">
                     <div class="experience-header">
-                        <div>
-                            <div class="experience-title">AI Product Manager Intern</div>
-                            <div class="experience-org">Venu.AI</div>
-                        </div>
-                        <div class="experience-date">Sep - Nov 2024</div>
+                        <h3>VP & Lead Mechanical Engineer</h3>
+                        <span class="experience-date">Sep 2023 - Present</span>
                     </div>
-                    <ul class="experience-description">
-                        <li>Led B2B outreach using AI-driven targeting and built NLP-powered email system</li>
-                        <li>Created strategic content and collaborated with cross-functional teams</li>
-                        <li>Enhanced client engagement through data-driven personalization</li>
+                    <div class="experience-org">Newport High School Rocketry Club</div>
+                    <ul>
+                        <li>Led team to a top-20 national finish (out of 1,000+ teams) at the 2024 American Rocketry Challenge.</li>
+                        <li>Applied AI to assess weather conditions, optimizing flight stability and rocket altitude for competitions.</li>
                     </ul>
                 </div>
+                </section>
 
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <div>
-                            <div class="experience-title">VP & Lead Mechanical Engineer</div>
-                            <div class="experience-org">Newport High School Rocketry Club</div>
-                        </div>
-                        <div class="experience-date">Sep 2023 - Present</div>
-                    </div>
-                    <ul class="experience-description">
-                        <li>Led team to top-20 national finish (out of 1,000+ teams) at 2024 American Rocketry Challenge</li>
-                        <li>Applied AI to assess weather conditions and optimize flight stability and rocket altitude</li>
-                        <li>Mentored 90+ members and oversaw team planning, budgeting, and resource allocation</li>
-                    </ul>
-                </div>
-
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <div>
-                            <div class="experience-title">Co-Founder & Vice President</div>
-                            <div class="experience-org">Artificial Intelligence Club</div>
-                        </div>
-                        <div class="experience-date">Sep 2023 - Present</div>
-                    </div>
-                    <ul class="experience-description">
-                        <li>Co-founded club to explore real-world AI applications and ethics; grew to 30+ students</li>
-                        <li>Led outreach initiatives and built interactive AI demos for 50+ middle schoolers</li>
-                        <li>Organized collaborative workshop with DECA on AI in business strategy</li>
-                    </ul>
-                </div>
-
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <div>
-                            <div class="experience-title">AI Programmer</div>
-                            <div class="experience-org">Inspirit AI Scholars Program</div>
-                        </div>
-                        <div class="experience-date">Fall 2023</div>
-                    </div>
-                    <ul class="experience-description">
-                        <li>Developed hybrid ML model for pneumonia detection using X-ray images</li>
-                        <li>Integrated classification and regression algorithms with neural networks</li>
-                        <li>Awarded certificate of excellence for contributions and technical skills</li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- Skills -->
             <section id="skills">
                 <h2>Technical Skills</h2>
-                
-                <div class="skills-container">
+                <div class="skills-grid">
                     <div class="skill-group">
-                        <h3>Programming Languages</h3>
+                        <h3>Languages & Frameworks</h3>
                         <div class="skill-list">
-                            <span class="skill-item">Python</span>
-                            <span class="skill-item">Java</span>
+                            <span>Python</span><span>Java</span><span>TensorFlow</span><span>Keras</span><span>Scikit-learn</span><span>Pandas</span><span>NumPy</span>
                         </div>
                     </div>
-
                     <div class="skill-group">
-                        <h3>ML Frameworks</h3>
+                        <h3>AI/ML Concepts</h3>
                         <div class="skill-list">
-                            <span class="skill-item">TensorFlow</span>
-                            <span class="skill-item">Keras</span>
-                            <span class="skill-item">Scikit-learn</span>
-                            <span class="skill-item">Pandas</span>
-                            <span class="skill-item">NumPy</span>
+                            <span>Neural Networks</span><span>NLP</span><span>GPT Optimization</span><span>SVM</span><span>Regression</span><span>Classification</span><span>SMOTE</span>
                         </div>
                     </div>
-
-                    <div class="skill-group">
-                        <h3>AI/ML Techniques</h3>
-                        <div class="skill-list">
-                            <span class="skill-item">Neural Networks</span>
-                            <span class="skill-item">NLP</span>
-                            <span class="skill-item">SVM</span>
-                            <span class="skill-item">Regression</span>
-                            <span class="skill-item">Classification</span>
-                            <span class="skill-item">SMOTE</span>
-                        </div>
-                    </div>
-
                     <div class="skill-group">
                         <h3>Tools & Technologies</h3>
                         <div class="skill-list">
-                            <span class="skill-item">GPT Optimization</span>
-                            <span class="skill-item">Data Visualization</span>
-                            <span class="skill-item">Git</span>
-                            <span class="skill-item">Zapier</span>
+                            <span>Git</span><span>Data Visualization</span><span>Zapier Automation</span>
                         </div>
                     </div>
                 </div>
             </section>
-
-            <!-- Awards -->
+            
             <section id="awards">
                 <h2>Awards & Recognition</h2>
-                
-                <div class="awards-container">
+                <div class="awards-grid">
                     <div class="award-item">
-                        <div class="award-name">National Finalist (Top 20)</div>
-                        <div class="award-org">American Rocketry Challenge, 2024</div>
+                        <i class="fas fa-rocket"></i>
+                        <h4>National Finalist (Top 20)</h4>
+                        <p>American Rocketry Challenge, 2024</p>
                     </div>
-
                     <div class="award-item">
-                        <div class="award-name">AP Scholar With Distinction</div>
-                        <div class="award-org">College Board, 2025</div>
+                        <i class="fas fa-award"></i>
+                        <h4>AP Scholar With Distinction</h4>
+                        <p>College Board, 2025</p>
                     </div>
-
                     <div class="award-item">
-                        <div class="award-name">Certificate of Excellence</div>
-                        <div class="award-org">Inspirit AI Scholars Program, 2023</div>
+                        <i class="fas fa-certificate"></i>
+                        <h4>Certificate of Excellence</h4>
+                        <p>Inspirit AI Scholars Program, 2023</p>
                     </div>
-
                     <div class="award-item">
-                        <div class="award-name">DECA Honorable Mention (Top 10)</div>
-                        <div class="award-org">Area Competition, 2024</div>
-                    </div>
-
-                    <div class="award-item">
-                        <div class="award-name">Student of the Month (Top 10)</div>
-                        <div class="award-org">Newport High School, 2024</div>
-                    </div>
-
-                    <div class="award-item">
-                        <div class="award-name">National Honor Society</div>
-                        <div class="award-org">70+ Hours Community Service, 2024-Present</div>
+                        <i class="fas fa-user-friends"></i>
+                        <h4>National Honor Society</h4>
+                        <p>70+ Hours Community Service</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Footer -->
             <footer>
-                <p><strong>Thanika Puhazholi</strong> &mdash; High School Senior & AI Researcher</p>
-                <p>Bellevue, Washington &mdash; Expected Graduation: June 2026</p>
-                <p style="margin-top: 1em;">© 2025 All rights reserved.</p>
+                <p>&copy; 2025 Thanika Puhazholi &mdash; Bellevue, Washington</p>
             </footer>
-        </div>
+        </main>
     </div>
 </body>
 </html>
