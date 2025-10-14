@@ -100,14 +100,10 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-primary), var(--purple));
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: 700;
+            display: inline-block;
             margin-bottom: 1.5rem;
             border: 3px solid var(--border);
+            object-fit: cover; /* This ensures the photo fits nicely */
         }
 
         .hero h1 {
@@ -504,7 +500,7 @@
     <main>
         <div class="container">
             <section class="hero">
-                <div class="hero-avatar">TP</div>
+                <img src="profile.jpg" alt="Thanika Puhazholi" class="hero-avatar">
                 <h1>Thanika Puhazholi</h1>
                 <div class="hero-subtitle">High School Senior, AI Researcher & Developer</div>
                 <p class="hero-description">Newport High School, Bellevue WA • Expected Graduation: June 2026</p>
