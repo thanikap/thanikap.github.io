@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thanika Puhazholi - High School Senior, AI Researcher & Developer</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+     <!-- Custom T favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f6feb'/><text x='50' y='75' font-size='70' text-anchor='middle' fill='white' font-family='Inter, sans-serif' font-weight='bold'>T</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -22,9 +24,9 @@
             --text-primary: #e6edf3;
             --text-secondary: #8b949e;
             --text-muted: #6e7681;
-            --accent-primary: #f59e0b;
-            --accent-secondary: #d97706;
-            --accent-tertiary: #fbbf24;
+            --accent-primary: #58a6ff;
+            --accent-secondary: #1f6feb;
+            --accent-tertiary: #388bfd;
             --success: #3fb950;
             --warning: #d29922;
             --purple: #a371f7;
@@ -178,7 +180,7 @@
             content: '';
             width: 4px;
             height: 28px;
-            background: linear-gradient(180deg, var(--accent-primary), var(--accent-tertiary));
+            background: linear-gradient(180deg, var(--accent-primary), var(--purple));
             border-radius: 2px;
         }
 
@@ -468,7 +470,7 @@
         }
 
         ::selection {
-            background: var(--accent-tertiary);
+            background: var(--accent-primary);
             color: var(--bg-primary);
         }
     </style>
@@ -496,18 +498,17 @@
                 <div class="hero-subtitle">AI Researcher & Developer</div>
                 <p class="hero-description">High School Senior at Newport High School, Bellevue WA • Expected Graduation: June 2026</p>
                 <div class="hero-buttons">
-                    <a href="#research" class="btn btn-primary">
-                        <span>🔬 View Research</span>
-                    </a>
                     <a href="https://linkedin.com/in/thanikapuhazholi" class="btn btn-secondary" target="_blank">
-                        <span>💼 LinkedIn</span>
+                        <span>LinkedIn</span>
                     </a>
                     <a href="thanikaresume.pdf" class="btn btn-secondary" target="_blank">
-                        <span>📄 Resume</span>
+                        <span>Resume</span>
+                    </a>
+                    <a href="#research" class="btn btn-primary">
+                        <span>View Research</span>
                     </a>
                 </div>
             </section>
-
             <section id="about">
                 <div class="section-header">
                     <h2 class="section-title">About Me</h2>
@@ -592,7 +593,6 @@
                         <div class="card-icon">🏥</div>
                         <div style="flex: 1;">
                             <h3 class="card-title"> Deep Learning Classification System for Pneumonia Detection in Medical Imaging</h3>
-                            <span class="badge badge-purple">Inspirit AI Program</span>
                         </div>
                     </div>
                     
