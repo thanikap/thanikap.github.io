@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Launch Wind Shear Classifier</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/4.10.0/tf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .file-input {
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .file-input:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        input[type="file"] {
+            margin: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+        }
+        input[type="number"] {
+            padding: 12px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            width: 120px;
+        }
+        input[type="number"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        button:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status.info {
+            background: rgba(54, 162, 235, 0.2);
+            border: 1px solid rgba(54, 162, 235, 0.5);
+        }
+        .status.success {
+            background: rgba(75, 192, 192, 0.2);
+            border: 1px solid rgba(75, 192, 192, 0.5);
+        }
+        .status.error {
+            background: rgba(255, 99, 132, 0.2);
+            border: 1px solid rgba(255, 99, 132, 0.5);
+        }
+        .prediction-result {
+            font-size: 1.5em;
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        .launch-go {
+            background: rgba(75, 192, 192, 0.3);
+            border: 2px solid rgba(75, 192, 192, 0.8);
+            color: #4BC0C0;
+        }
+        .launch-no-go {
+            background: rgba(255, 99, 132, 0.3);
+            border: 2px solid rgba(255, 99, 132, 0.8);
+            color: #FF6384;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4BC0C0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Rocket Launch Wind Shear Classifier</h1>
+        
+        <div class="section">
+            <h2>📁 Upload Training Data</h2>
+            <div class="file-input">
+                <label for="launchedFile">
+                    <strong>Launched.csv</strong> - Wind shear data for successful launches<br>
+                    <small>Format: Dataset, Date, Time, SHR_data</small>
+                    <input type="file" id="launchedFile" accept=".csv" style="display: block; margin: 10px auto;">
+                </label>
+            </div>
+            <div class="file-input">
+                <label for="postponedFile">
+                    <strong>Postponed.csv</strong> - Wind shear data for postponed launches<br>
+                    <small>Format: Dataset, Date, Time, SHR_data</small>
+                    <input type="file" id="postponedFile" accept=".csv" style="display: block; margin: 10px auto;">
+                </label>
+            </div>
+            <button onclick="loadAndAnalyzeData()">📊 Load & Analyze Data</button>
+        </div>
+
+        <div class="section">
+            <h2>🧠 Model Training</h2>
+            <div id="dataStatus" class="status info" style="display: none;">
+                Ready to train model...
+            </div>
+            <button id="trainButton" onclick="trainModel()" disabled>🎯 Train Classifier</button>
+            <div id="trainingStatus"></div>
+            <div class="chart-container" id="trainingChart" style="display: none;">
+                <canvas id="lossChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔮 Make Predictions</h2>
+            <div>
+                <label>Wind Shear Value:</label>
+                <input type="number" id="windShearInput" placeholder="Enter wind shear" step="0.01">
+                <button id="predictButton" onclick="makePrediction()" disabled>🎯 Predict Launch Decision</button>
+            </div>
+            <div id="predictionResult"></div>
+        </div>
+
+        <div class="section" id="metricsSection" style="display: none;">
+            <h2>📈 Model Performance</h2>
+            <div class="metrics" id="performanceMetrics"></div>
+            <div class="chart-container">
+                <canvas id="dataChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let model = null;
+        let scaler = { mean: 0, std: 1 };
+        let launchedData = [];
+        let postponedData = [];
+        let trainX = null;
+        let trainY = null;
+
+        // Utility function to parse CSV
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            
+            // Handle case where there might not be a header row
+            let headers, startRow;
+            const firstLine = lines[0].trim();
+            
+            // Check if first line looks like headers (contains non-numeric data)
+            if (firstLine.toLowerCase().includes('dataset') || firstLine.toLowerCase().includes('date') || firstLine.toLowerCase().includes('time')) {
+                headers = firstLine.split(/\s+|,/).map(h => h.trim()).filter(h => h.length > 0);
+                startRow = 1;
+            } else {
+                // Assume standard format: Dataset, Date, Time, SHR_data
+                headers = ['Dataset', 'Date', 'Time', 'SHR_data'];
+                startRow = 0;
+            }
+            
+            const data = [];
+            
+            for (let i = startRow; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.length === 0) continue;
+                
+                // Split by spaces or commas, handling multiple delimiters
+                const values = line.split(/\s+|,/).map(v => v.trim()).filter(v => v.length > 0);
+                
+                if (values.length >= 4) { // Expect at least 4 columns
+                    const row = {};
+                    
+                    // Map values to expected columns
+                    row['Dataset'] = values[0];
+                    row['Date'] = values[1];
+                    row['Time'] = values[2];
+                    row['SHR_data'] = parseFloat(values[3]);
+                    
+                    // Only add if SHR_data is a valid number
+                    if (!isNaN(row['SHR_data'])) {
+                        data.push(row);
+                    }
+                }
+            }
+            
+            return { headers: ['Dataset', 'Date', 'Time', 'SHR_data'], data };
+        }
+
+        // Load and analyze data
+        async function loadAndAnalyzeData() {
+            const launchedFile = document.getElementById('launchedFile').files[0];
+            const postponedFile = document.getElementById('postponedFile').files[0];
+            
+            if (!launchedFile || !postponedFile) {
+                showStatus('error', 'Please upload both CSV files');
+                return;
+            }
+
+            try {
+                showStatus('info', 'Loading data files...');
+                
+                const launchedText = await launchedFile.text();
+                const postponedText = await postponedFile.text();
+                
+                const launchedParsed = parseCSV(launchedText);
+                const postponedParsed = parseCSV(postponedText);
+                
+                launchedData = launchedParsed.data;
+                postponedData = postponedParsed.data;
+                
+                console.log('Launched data sample:', launchedData.slice(0, 5));
+                console.log('Postponed data sample:', postponedData.slice(0, 5));
+                console.log('Headers detected:', launchedParsed.headers);
+                
+                // Extract wind shear values from SHR_data column
+                const windShearKey = findWindShearColumn(launchedParsed.headers);
+                console.log('Using wind shear column:', windShearKey);
+                
+                if (!windShearKey) {
+                    showStatus('error', 'Could not identify wind shear column. Expected SHR_data column.');
+                    return;
+                }
+                
+                const launchedShear = launchedData.map(row => row[windShearKey]).filter(v => !isNaN(v));
+                const postponedShear = postponedData.map(row => row[windShearKey]).filter(v => !isNaN(v));
+                
+                if (launchedShear.length === 0 || postponedShear.length === 0) {
+                    showStatus('error', 'No valid wind shear data found');
+                    return;
+                }
+                
+                // Prepare training data
+                const X = [...launchedShear, ...postponedShear];
+                const y = [...Array(launchedShear.length).fill(1), ...Array(postponedShear.length).fill(0)];
+                
+                // Normalize data
+                const mean = X.reduce((a, b) => a + b) / X.length;
+                const std = Math.sqrt(X.reduce((a, b) => a + (b - mean) ** 2) / X.length);
+                scaler = { mean, std };
+                
+                const X_normalized = X.map(x => (x - mean) / std);
+                
+                trainX = tf.tensor2d(X_normalized.map(x => [x]));
+                trainY = tf.tensor2d(y.map(label => [label]));
+                
+                showStatus('success', `Data loaded successfully! 
+                    Launched samples: ${launchedShear.length}, 
+                    Postponed samples: ${postponedShear.length}`);
+                
+                document.getElementById('trainButton').disabled = false;
+                
+                // Visualize data distribution
+                visualizeData(launchedShear, postponedShear, windShearKey);
+                
+            } catch (error) {
+                showStatus('error', `Error loading data: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        function findWindShearColumn(headers) {
+            // Look for SHR_data column specifically
+            if (headers.includes('SHR_data')) return 'SHR_data';
+            
+            // Look for columns containing 'shear' or 'shr' (case insensitive)
+            const shearCol = headers.find(h => 
+                h.toLowerCase().includes('shear') || 
+                h.toLowerCase().includes('shr')
+            );
+            if (shearCol) return shearCol;
+            
+            // If not found, assume last column is wind shear
+            return headers[headers.length - 1];
+        }
+
+        function visualizeData(launchedShear, postponedShear, windShearKey) {
+            const ctx = document.getElementById('dataChart').getContext('2d');
+            
+            // Create histogram data
+            const allData = [...launchedShear, ...postponedShear];
+            const min = Math.min(...allData);
+            const max = Math.max(...allData);
+            const bins = 20;
+            const binSize = (max - min) / bins;
+            
+            const launchedHist = createHistogram(launchedShear, min, max, bins);
+            const postponedHist = createHistogram(postponedShear, min, max, bins);
+            
+            const labels = Array.from({length: bins}, (_, i) => 
+                (min + i * binSize).toFixed(2));
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Launched',
+                        data: launchedHist,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Postponed',
+                        data: postponedHist,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Wind Shear Distribution (${windShearKey})`,
+                            color: 'white'
+                        },
+                        legend: {
+                            labels: { color: 'white' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Wind Shear', color: 'white' },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Frequency', color: 'white' },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+            
+            document.getElementById('metricsSection').style.display = 'block';
+        }
+
+        function createHistogram(data, min, max, bins) {
+            const binSize = (max - min) / bins;
+            const hist = new Array(bins).fill(0);
+            
+            data.forEach(value => {
+                const binIndex = Math.min(Math.floor((value - min) / binSize), bins - 1);
+                hist[binIndex]++;
+            });
+            
+            return hist;
+        }
+
+        // Train the model
+        async function trainModel() {
+            if (!trainX || !trainY) {
+                showStatus('error', 'Please load data first');
+                return;
+            }
+
+            try {
+                showStatus('info', 'Training model...');
+                document.getElementById('trainButton').disabled = true;
+                
+                // Create a simple neural network
+                model = tf.sequential({
+                    layers: [
+                        tf.layers.dense({ inputShape: [1], units: 16, activation: 'relu' }),
+                        tf.layers.dropout({ rate: 0.2 }),
+                        tf.layers.dense({ units: 8, activation: 'relu' }),
+                        tf.layers.dense({ units: 1, activation: 'sigmoid' })
+                    ]
+                });
+
+                model.compile({
+                    optimizer: tf.train.adam(0.01),
+                    loss: 'binaryCrossentropy',
+                    metrics: ['accuracy']
+                });
+
+                // Setup training visualization
+                const trainingChart = setupTrainingChart();
+                document.getElementById('trainingChart').style.display = 'block';
+
+                // Train the model
+                const history = await model.fit(trainX, trainY, {
+                    epochs: 100,
+                    batchSize: 32,
+                    validationSplit: 0.2,
+                    callbacks: {
+                        onEpochEnd: (epoch, logs) => {
+                            updateTrainingChart(trainingChart, epoch, logs);
+                            document.getElementById('trainingStatus').innerHTML = 
+                                `<div class="status info">Epoch ${epoch + 1}/100 - Loss: ${logs.loss.toFixed(4)}, Accuracy: ${logs.acc.toFixed(4)}</div>`;
+                        }
+                    }
+                });
+
+                showStatus('success', 'Model trained successfully!');
+                document.getElementById('predictButton').disabled = false;
+                
+                // Calculate and display performance metrics
+                await calculatePerformanceMetrics();
+
+            } catch (error) {
+                showStatus('error', `Training failed: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        function setupTrainingChart() {
+            const ctx = document.getElementById('lossChart').getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Training Loss',
+                        data: [],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.1
+                    }, {
+                        label: 'Validation Loss',
+                        data: [],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Training Progress',
+                            color: 'white'
+                        },
+                        legend: {
+                            labels: { color: 'white' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Epoch', color: 'white' },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Loss', color: 'white' },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTrainingChart(chart, epoch, logs) {
+            chart.data.labels.push(epoch + 1);
+            chart.data.datasets[0].data.push(logs.loss);
+            chart.data.datasets[1].data.push(logs.val_loss);
+            
+            // Keep only last 50 points for better visualization
+            if (chart.data.labels.length > 50) {
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+                chart.data.datasets[1].data.shift();
+            }
+            
+            chart.update('none');
+        }
+
+        async function calculatePerformanceMetrics() {
+            if (!model || !trainX || !trainY) return;
+
+            // Make predictions on training data
+            const predictions = model.predict(trainX);
+            const predArray = await predictions.data();
+            const actualArray = await trainY.data();
+
+            // Calculate metrics
+            let tp = 0, tn = 0, fp = 0, fn = 0;
+            
+            for (let i = 0; i < predArray.length; i++) {
+                const predicted = predArray[i] > 0.5 ? 1 : 0;
+                const actual = actualArray[i];
+                
+                if (predicted === 1 && actual === 1) tp++;
+                else if (predicted === 0 && actual === 0) tn++;
+                else if (predicted === 1 && actual === 0) fp++;
+                else if (predicted === 0 && actual === 1) fn++;
+            }
+
+            const accuracy = (tp + tn) / (tp + tn + fp + fn);
+            const precision = tp / (tp + fp) || 0;
+            const recall = tp / (tp + fn) || 0;
+            const f1 = 2 * (precision * recall) / (precision + recall) || 0;
+
+            // Display metrics
+            document.getElementById('performanceMetrics').innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">${(accuracy * 100).toFixed(1)}%</div>
+                    <div>Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${(precision * 100).toFixed(1)}%</div>
+                    <div>Precision</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${(recall * 100).toFixed(1)}%</div>
+                    <div>Recall</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${f1.toFixed(3)}</div>
+                    <div>F1 Score</div>
+                </div>
+            `;
+
+            predictions.dispose();
+        }
+
+        // Make prediction
+        async function makePrediction() {
+            const windShearValue = parseFloat(document.getElementById('windShearInput').value);
+            
+            if (isNaN(windShearValue)) {
+                showStatus('error', 'Please enter a valid wind shear value');
+                return;
+            }
+
+            if (!model) {
+                showStatus('error', 'Please train the model first');
+                return;
+            }
+
+            try {
+                // Normalize input
+                const normalizedValue = (windShearValue - scaler.mean) / scaler.std;
+                const inputTensor = tf.tensor2d([[normalizedValue]]);
+                
+                // Make prediction
+                const prediction = model.predict(inputTensor);
+                const predictionValue = await prediction.data();
+                const confidence = predictionValue[0];
+                
+                // Display result
+                const decision = confidence > 0.5 ? 'GO' : 'NO-GO';
+                const resultClass = confidence > 0.5 ? 'launch-go' : 'launch-no-go';
+                
+                document.getElementById('predictionResult').innerHTML = `
+                    <div class="prediction-result ${resultClass}">
+                        <strong>Launch Decision: ${decision}</strong><br>
+                        Confidence: ${(confidence * 100).toFixed(1)}%<br>
+                        <small>Wind Shear: ${windShearValue}</small>
+                    </div>
+                `;
+
+                inputTensor.dispose();
+                prediction.dispose();
+
+            } catch (error) {
+                showStatus('error', `Prediction failed: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('trainingStatus');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
